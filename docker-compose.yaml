@@ -1,0 +1,30 @@
+version: "3.9"
+networks:
+  challenge:
+    name: challenge
+    driver: bridge
+services:
+  ics-challenge:
+    container_name: ics-challenge
+    image: kittithon/php-nginx:8.0  # nginx php v.8.0 run on MacBook m1
+    ports:
+      - 9999:80 #run port 9999
+    volumes:
+      - ./challenge:/app
+    networks:
+      - challenge
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+  mariadb-challenge:
+    container_name: mariadb-challenge
+    image: kittithon/mariadb:10.2-bionic #mariadb
+    restart: always
+    tty: true
+    ports:
+      - 3306:3306
+    volumes:
+      - ./database/mariadb/data:/var/lib/mysql
+    networks:
+      - challenge
+    environment:
+      MYSQL_ROOT_PASSWORD: root
